@@ -1,15 +1,15 @@
 Lab \#2
 ================
 
-## in class Monday Sept 21, 2020
+## in class Thursday Sept 9, 2021
 
 ## Econ B2000, MA Econometrics
 
 ## Kevin R Foster, the Colin Powell School at the City College of New York, CUNY
 
-## Fall 2020
+## Fall 2021
 
-![](2labs.jpg)
+![](2labs_c.jpg)
 
 Overall Goal: Using PUMS data, consider how outcomes of interest vary
 with college major choice. Groups should prepare a 1-min presentation by
@@ -28,8 +28,10 @@ accommodation and restaurants. Here’s some code that will create a dummy
 variable for workers in those sectors.
 
 ``` r
+# first change the factor back into a number
  acs2017_ny$IND_number <- as.numeric(levels(acs2017_ny$IND))[acs2017_ny$IND]
  acs2017_ny$Covid_risk <- ((acs2017_ny$IND_number > 4600) & acs2017_ny$IND_number < 6000) | ((acs2017_ny$IND_number > 8500) & (acs2017_ny$IND_number < 8700))
+# then pick certain ranges of numbers
 ```
 
 For now don’t get lost in looking at every major but maybe pick a couple

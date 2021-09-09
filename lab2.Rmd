@@ -4,12 +4,12 @@ output: github_document
 
 ---
 
-## in class Monday Sept 21, 2020
+## in class Thursday Sept 9, 2021
 ## Econ B2000, MA Econometrics
 ## Kevin R Foster, the Colin Powell School at the City College of New York, CUNY
-## Fall 2020
+## Fall 2021
 
-![](2labs.jpg){width=25%}
+![](2labs_c.jpg){width=25%}
 
 Overall Goal: Using PUMS data, consider how outcomes of interest vary with college major choice. Groups should prepare a 1-min presentation by one of the group members about their experiment process and results. You get 45 min to prepare.
 
