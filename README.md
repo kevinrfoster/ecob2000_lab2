@@ -70,3 +70,20 @@ to persuade a person with the opposite view?
 
 I’ve included a file that gives the details of the IND coding, if you
 want to get deeper into the weeds of this analysis.
+
+Many students had issues picking a subset of the data, whether the
+females or the prime-aged (with Age \>= 25 and Age \<= 55) or working in
+certain industries or with certain degree categories. Here is some
+psuedo-code:
+
+``` r
+# from orig_data, pick a subset
+restrict1 <- (orig_data$x1 == 5) | (orig_data$x2 == "Blue")
+data_new <- subset(orig_data,restrict1)
+```
+
+This outputs a new data frame with all the same variables as the
+original data frame, but only for those folks with X1 value of 5 or
+those with X2 value of Blue. Obviously you’d want to set your own
+restrictions, this is just giving you the basic framework of how to
+create a subset to focus on certain observations.
