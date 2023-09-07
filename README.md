@@ -1,20 +1,20 @@
 Lab \#2
 ================
 
-## in class Thursday Sept 8, 2022
+## in class Thursday Sept 14, 2023
 
 ## Econ B2000, MA Econometrics
 
 ## Kevin R Foster, the Colin Powell School at the City College of New York, CUNY
 
-## Fall 2022
+## Fall 2023
 
 <img src="2labs_c.jpg" style="width:25.0%" />
 
 Overall Goal: Using Household Pulse data, consider how outcomes of
 interest vary with vaccination status. Groups should prepare a 2-min
 presentation by one of the group members about their experiment process
-and results. You get 45 min to prepare.
+and results. You get 30 min to prepare.
 
 This time, we reverse the order of steps from previous: first look at
 some of the data, then step back and think about it. (Not necessarily
