@@ -93,18 +93,6 @@ to persuade a person with the opposite view?
 require(tidyverse)
 ```
 
-    ## Loading required package: tidyverse
-
-    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-    ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-    ## ✔ purrr     1.0.2     
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
 ``` r
 require(ggplot2)
@@ -166,14 +154,14 @@ p <- ggplot(data = HHP_NY_NJ,
 p + geom_bar()
 ```
 
-![](lab2_F24_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 # compares just numbers in 2 states
 p + geom_bar(position = "fill") # meh
 ```
 
-![](lab2_F24_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-2.png)<!-- -->
 
 ``` r
 p + geom_bar(mapping = aes(
@@ -181,7 +169,7 @@ p + geom_bar(mapping = aes(
   group = EST_ST)) # shows proportions but stacks histograms in weird way
 ```
 
-![](lab2_F24_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-3.png)<!-- -->
 
 ``` r
 p + geom_bar(position = "dodge",
@@ -190,7 +178,7 @@ p + geom_bar(position = "dodge",
                group = EST_ST)) # now compares the 2 histograms, might be useful 
 ```
 
-![](lab2_F24_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-4.png)<!-- -->
 
 ``` r
 # a bit nicer stuff
@@ -229,4 +217,4 @@ p_age_religion + geom_smooth(aes(color=Education, fill=Education)) +
 
     ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
 
-![](lab2_F24_files/figure-gfm/unnamed-chunk-2-5.png)<!-- -->
+![](figure-gfm/unnamed-chunk-2-5.png)<!-- -->
