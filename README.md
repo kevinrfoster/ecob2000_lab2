@@ -1,24 +1,23 @@
 Lab \#2
 ================
 
-## in class Thursday Sept 12, 2024
+## in class Thursday Sept 11, 2025
 
 ## Econ B2000, MA Econometrics
 
 ## Kevin R Foster, the Colin Powell School at the City College of New York, CUNY
 
-## Fall 2024
+## Fall 2025
 
 <img src="2labs_c.jpg" style="width:25.0%" />
 
-Overall Goal: Using Household Pulse data, consider how outcomes of
-interest vary with vaccination status. Note that we’re not saying
-“caused” since that’s much tougher to demonstrate. Just find some things
-that co-vary. We’ll use ggplot – you should be up to Chapter 4 in the
-Healy book.
+Overall Goal: Using Household Pulse data, consider how partnering (being
+married or similar) varies with outcomes of interest. Note that we’re
+not saying “caused” since that’s much tougher to demonstrate. Just find
+some things that co-vary. We’ll use ggplot.
 
 Start by writing down 3 variables (from the dataset) that you would
-guess would have the strongest relationship to vax status. Then we’ll
+guess would have the strongest relationship to partnering Then we’ll
 form into groups and spend a few minutes talking through ideas to create
 a group ranking of which are the strongest variables. Maybe talk about a
 more subtle question: what variable do you think would be most
@@ -35,15 +34,9 @@ The aim here is to combine both some graphs (I put examples below, which
 I’d done in class) and also some statistics about means and standard
 deviations within groups.
 
-You might split the sample into groups: those who got a vaccine shot
-(RECVDVACC == “yes got vaxx”), those who did not (RECVDVACC == “no did
-not get vaxx”), but then you have to figure out how to deal with those
-who did not answer (or did not provide an answer that matches to yes or
-no) – i.e. where (RECVDVACC == “NA”) is true. What are some of the ways
-that those groups differ?
-
-Or you could split into groups based on your candidate variable(s) and
-look at how much RECVDVACC changes between the groups.
+You might split the sample into groups, perhaps pick just people with
+advanced degrees or maybe you’re particularly interested in Hispanic
+women, or people in NY, or some other group.
 
 Many students have issues picking a subset of the data, whether the
 females or the prime-aged (with Age \>= 25 and Age \<= 55) or with
@@ -51,19 +44,28 @@ certain degree categories or whatever. Here is some pseudo-code:
 
 ``` r
 # from orig_data, pick a subset
+
 restrict1 <- (orig_data$x1 == 5) | (orig_data$x2 == "Blue")
 data_new <- subset(orig_data,restrict1)
+
+# alt with tidyverse
+library(tidyverse)
+data_new <- orig_data %>% filter((x1 == 5) | (x2 == "Blue"))
 ```
 
 This outputs a new data frame with all the same variables as the
 original data frame, but only for those folks with X1 value of 5 **or**
-those with X2 value of Blue. The vertical line, \|, symbolizes logical
-**or**; an ampersand, &, would symbolize logical **and**. Those would
+those with X2 value of Blue. The vertical line, `|`, symbolizes logical
+**or**; an ampersand, `&`, would symbolize logical **and**. Those would
 give different subgroups. The **or** combines together all the 5’s along
 with all the Blues; the **and** would pick out just the Blue 5’s, the
 overlap. Obviously you’d want to set your own restrictions, this is just
 giving you the basic framework of how to create a subset to focus on
 certain observations.
+
+I show two methods, either with `subset` or with the `tidyverse`
+library. The tidyverse code is cleaner but takes a bit more experience
+to use.
 
 Comparing two reasonable groups, what is the size of the difference in
 outcome? What is the standard error of that difference measure? Using
@@ -76,7 +78,7 @@ probabilities using Bayes’ Theorem. Is your crosstab mutually exclusive
 and exhaustive?
 
 What other factors could explain the difference in outcome? Among your
-list of differences in vax status, are there some potential confounders
+list of differences in partnering, are there some potential confounders
 such as age or education? What else?
 
 How can some graphs help understand what these numbers are telling you?
@@ -90,131 +92,220 @@ to persuade a person with the opposite view?
 ### Graph examples
 
 ``` r
-require(tidyverse)
-```
-
-
-``` r
-require(ggplot2)
+library(tidyverse)
+library(ggplot2)
 
 # this would be different for you
-setwd("..\\..\\data\\Household Pulse Survey Phase4 Cycle2")
-load("Household_Pulse_data_ph4c2.RData")
+setwd("..")
+setwd("HPS_2020-24")
 
-# sometimes numbers are more useful than categories
+load("d_HHP2020_24.Rdata")
 
-Household_Pulse_data$income_midpoint <- fct_recode(Household_Pulse_data$INCOME, 
-                                                   "12500" = "HH income less than $25k",
-                                                   "30000" = "HH income $25k - $34.9k",
-                                                   "40000" = "HH income $35k - 49.9",
-                                                   "62500" = "HH income $50k - 74.9",
-                                                   "82500" = "HH income $75 - 99.9",
-                                                   "125000" = "HH income $100k - 149",
-                                                   "175000" = "HH income $150 - 199",
-                                                   "225000" = "HH income $200k +",
-                                                   NULL = "NA")
-Household_Pulse_data$income_midpoint <- as.numeric(levels(Household_Pulse_data$income_midpoint))[Household_Pulse_data$income_midpoint]
+setwd("..")
+setwd("ecob2000_lab2")
+```
 
+Note a few features of the data. I’ve created two income measures:
+`income_midpoint` and `income_midpoint_factor`. The first is treated as
+a number so it’s easy to find the average value. But perhaps too easy,
+that might be misleading! The second is treated as a label. See the
+differences in `summary`.
 
-Household_Pulse_data$Educ_years <- fct_recode(Household_Pulse_data$EEDUC,
-                                              "8" = "less than hs",
-                                              "11" = "some hs",
-                                              "12" = "HS diploma",
-                                              "13" = "some coll",
-                                              "14" = "assoc deg",
-                                              "16" = "bach deg",
-                                              "18" = "adv deg")
+``` r
+summary(d_HHP2020_24$income_midpoint)
+```
 
-Household_Pulse_data$Educ_years <- as.numeric(levels(Household_Pulse_data$Educ_years))[Household_Pulse_data$Educ_years]
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##   12500   40000   82500   95461  125000  225000  187771
 
-Household_Pulse_data$Age <- 2024 - Household_Pulse_data$TBIRTH_YEAR
+``` r
+summary(d_HHP2020_24$income_midpoint_factor)
+```
 
-# this looks at just 3 categories
-Household_Pulse_data$Education <- fct_recode(Household_Pulse_data$EEDUC, 
-                                             "high school" = "HS diploma",
-                                             "some college" = "some coll",
-                                             "some college" = "assoc deg",
-                                             "college grad" = "bach deg",
-                                             "college grad" = "adv deg",
-                                             NULL = "less than hs",
-                                             NULL = "some hs")
+    ##  12500  30000  40000  62500  82500 125000 175000 225000   NA's 
+    ##  85405  67970  85421 134183 112727 145006  73407  92900 187771
 
+People are asked to report their household income as being within a
+range and I’ve created labels and numbers at the midpoint of that range.
+(Well, not precisely since the upper range is “200,000 and above” which
+I’ve coded as `225,000`. Obviously not the midpoint.)
 
+The ranges are:
 
+Less than 25,000  
+25,000 - 34,999  
+35,000 - 49,999  
+50,000 - 74,999  
+75,000 - 99,999  
+100,000 - 149,999  
+150,000 - 199,999 200,000 and above
 
+Also for this exercise note that this is household income, so if two
+people get married then if they’re both working their household income
+will be larger than when they were single and living in separate
+households.
+
+I will show you some simple graphs to give a baseline for you to start.
+
+First step, the whole dataset is almost a million observations so that’s
+a bit large for some purposes. Here are some smaller versions,
+
+``` r
 # might want to plot a more modestly sized dataset, to start
-HHP_NY <- Household_Pulse_data %>% filter(EST_ST == "New York")
+HHP_NY <- d_HHP2020_24 %>% filter(State == "New York")
 
 # or compare NY & NJ
-HHP_NY_NJ <- Household_Pulse_data %>% filter((EST_ST == "New York") | (EST_ST == "New Jersey") )
+HHP_NY_NJ <- d_HHP2020_24 %>% filter((State == "New York") | (State == "New Jersey") )
+```
 
+Here are some simple graphs.
 
+``` r
 p <- ggplot(data = HHP_NY_NJ,
-            mapping = aes(x = EEDUC, fill = EST_ST))
+            mapping = aes(x = Education, fill = State))
 p + geom_bar()
 ```
 
-![](figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+Welp, that’s a graph. That’s where most of us start – not quite what we
+wanted. This just gives the count of numbers of respondents in various
+education categories but the number is not what we really want. And we
+certainly don’t want the two numbers stacked.
 
 ``` r
-# compares just numbers in 2 states
 p + geom_bar(position = "fill") # meh
 ```
 
-![](figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+That graph is perhaps a bit more helpful – although not perhaps in
+answering the question you wanted. This shows the fraction of each
+education category who are living in the 2 states, so you can see that
+NY has more than 50% of the people with less than a high school
+education, while having fewer than 50% of the people with exactly a high
+school diploma. But it’s still not all that great. That’s probably not
+the proportion that we’re interested in.
 
 ``` r
 p + geom_bar(mapping = aes(
   y = after_stat(prop),
-  group = EST_ST)) # shows proportions but stacks histograms in weird way
+  group = State)) 
 ```
 
-![](figure-gfm/unnamed-chunk-2-3.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+This finally shows proportions by state, but stacks histograms in a
+weird way.
 
 ``` r
 p + geom_bar(position = "dodge",
              mapping = aes(
                y = after_stat(prop),
-               group = EST_ST)) # now compares the 2 histograms, might be useful 
+               group = State)) # now compares the 2 histograms, might be useful 
 ```
 
-![](figure-gfm/unnamed-chunk-2-4.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+That’s a bit better – now this looks at the proportions, in each state,
+who have different educational qualifications. In NY, slightly more than
+30% of respondents have an advanced degree while in NJ it’s slightly
+less than 30%. It’s tougher to see for the lower-educated groups but NY
+also has a bit higher fraction there too. So NY has a higher fraction of
+people in the extremes (either a little or a lot of education) while NJ
+has more in the middle. Which is useful as a reminder that if we look at
+the averages, we might miss that.
+
+One reason I use NY and NJ is because you probably know people who have
+moved between those states. It’s easy to fall into traps if you forget
+that lots of people move around.
+
+Those graphs aren’t about partnering, which I’d said we’d consider. Here
+I create a dummy variable (note that this survey doesn’t have a response
+for ‘living together’) for if a person is married or was once married
+(answers that they divorced, separated, or were widowed).
 
 ``` r
-# a bit nicer stuff
-library(viridis)
+d_HHP2020_24$partnered <- (d_HHP2020_24$Mar_Stat == "Married") | 
+                      (d_HHP2020_24$Mar_Stat == "widowed") | 
+                      (d_HHP2020_24$Mar_Stat == "divorced") |
+                      (d_HHP2020_24$Mar_Stat == "separated")
+# if ever partnered
+xtabs( ~ Mar_Stat + partnered, data = d_HHP2020_24) # just to check
 ```
 
-    ## Loading required package: viridisLite
+    ##            partnered
+    ## Mar_Stat     FALSE   TRUE
+    ##   Married        0 556611
+    ##   widowed        0  54162
+    ##   divorced       0 152705
+    ##   separated      0  17850
+    ##   never     195037      0
+
+We’ll start by cutting the data into particular age groups, focusing on
+people 18 - 45. Note that we want to be finicky about distinguishing `<`
+from `<=` like in a math class. For age, that’s easy to do by listing
+non-integers since the data always has age as integer.
 
 ``` r
-HHP_use <- Household_Pulse_data %>% filter( TBIRTH_YEAR > 1936 )
-HHP_use <- HHP_use %>% drop_na(Education) 
+HHP_NY_NJ_under45 <- HHP_NY_NJ %>% filter(Age < 45)
 
+HHP_NY_NJ_under45$Age_groups <- cut(HHP_NY_NJ_under45$Age,
+                            breaks = c(-Inf, 24.5, 29.5, 34.5, 39.5, Inf),
+                            labels = c("under 25","25 to 29","30 to 34","35 to 39", "40 to 44"))
 
-HHP_use$religious_n <- fct_recode(HHP_use$SUPPORT3, 
-                                              "1" = "attend church or religious ceremony never or less than 1 per year",
-                                              "2" = "1 to 3 per year",
-                                              "3" = "4 to 11 per year",
-                                              "4" = "12+ times per year",
-                                              NULL = "NA")
-HHP_use$religious_n <- as.numeric(levels(HHP_use$religious_n))[HHP_use$religious_n]
-
-
-HHP_graph1 <- HHP_use %>% drop_na(religious_n)
-
-p_age_religion <- ggplot(data = HHP_graph1,
-                         mapping = aes(x = Age,
-                                       y = religious_n,
-                                       color = Education,
-                                       fill = Education))
-
-p_age_religion + geom_smooth(aes(color=Education, fill=Education)) + 
-  scale_color_viridis_d(option = "magma", end = 0.75) + 
-  scale_fill_viridis_d(option = "inferno", end = 0.75) + 
-  labs(x = "Age", y = "religious attendance", fill = "Education") + guides(color = "none")
+# check that it looks right:
+HHP_NY_NJ_under45 %>% group_by(Age_groups) %>% summarize(mn = mean(Age))
 ```
 
-    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+    ## # A tibble: 5 × 2
+    ##   Age_groups    mn
+    ##   <fct>      <dbl>
+    ## 1 under 25    21.8
+    ## 2 25 to 29    27.2
+    ## 3 30 to 34    32.1
+    ## 4 35 to 39    37.1
+    ## 5 40 to 44    42.0
 
-![](figure-gfm/unnamed-chunk-2-5.png)<!-- -->
+Here’s a first try at graphing,
+
+``` r
+p_MS_Age <- ggplot(data = HHP_NY_NJ_under45,
+            mapping = aes(x = Age_groups, fill = Mar_Stat))
+
+p_MS_Age + geom_bar(position = "stack", stat = "count")  
+```
+
+![](lab2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+But the different numbers in different age groups means it’s not as easy
+to read. Therefore try to make fractions of the age group. I’ll do this
+in two stages to make it easier to see the steps – and also to check
+if/when something goes wrong. First step is to calculate the fractions,
+
+``` r
+frac_MS_byAge <- HHP_NY_NJ_under45 %>% 
+  group_by(Age_groups, Mar_Stat) %>% 
+  summarize( n = n() ) %>% 
+  mutate(freq_in_group = n / sum(n) )
+```
+
+    ## `summarise()` has grouped output by 'Age_groups'. You can override using the
+    ## `.groups` argument.
+
+Take a look at the output to see if that looks sensible. Then graph,
+
+``` r
+p_frac_MS_Age <- ggplot(data = frac_MS_byAge, 
+                        mapping = aes(x = Age_groups, 
+                                      y = freq_in_group * 100, # make a percentage
+                                      fill = Mar_Stat))
+
+p_frac_MS_Age + geom_bar(stat = "identity")  
+```
+
+![](lab2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+Try to make some more useful graphs! Work with your group both to
+generate ideas but also to critique, to decide that some ideas didn’t
+really work out.
