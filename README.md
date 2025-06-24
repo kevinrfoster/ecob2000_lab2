@@ -166,7 +166,7 @@ p <- ggplot(data = HHP_NY_NJ,
 p + geom_bar()
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](unnamed-chunk-5-1.png)<!-- -->
 
 Welp, that’s a graph. That’s where most of us start – not quite what we
 wanted. This just gives the count of numbers of respondents in various
@@ -177,7 +177,7 @@ certainly don’t want the two numbers stacked.
 p + geom_bar(position = "fill") # meh
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](unnamed-chunk-6-1.png)<!-- -->
 
 That graph is perhaps a bit more helpful – although not perhaps in
 answering the question you wanted. This shows the fraction of each
@@ -193,7 +193,7 @@ p + geom_bar(mapping = aes(
   group = State)) 
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](unnamed-chunk-7-1.png)<!-- -->
 
 This finally shows proportions by state, but stacks histograms in a
 weird way.
@@ -205,7 +205,7 @@ p + geom_bar(position = "dodge",
                group = State)) # now compares the 2 histograms, might be useful 
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](unnamed-chunk-8-1.png)<!-- -->
 
 That’s a bit better – now this looks at the proportions, in each state,
 who have different educational qualifications. In NY, slightly more than
@@ -276,7 +276,7 @@ p_MS_Age <- ggplot(data = HHP_NY_NJ_under45,
 p_MS_Age + geom_bar(position = "stack", stat = "count")  
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](unnamed-chunk-11-1.png)<!-- -->
 
 But the different numbers in different age groups means it’s not as easy
 to read. Therefore try to make fractions of the age group. I’ll do this
@@ -304,7 +304,7 @@ p_frac_MS_Age <- ggplot(data = frac_MS_byAge,
 p_frac_MS_Age + geom_bar(stat = "identity")  
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](unnamed-chunk-13-1.png)<!-- -->
 
 Try to make some more useful graphs! Work with your group both to
 generate ideas but also to critique, to decide that some ideas didn’t
