@@ -1,7 +1,7 @@
 Lab \#2
 ================
 
-## in class Thursday Sept 17, 2026
+## in class Thursday Sept 17, 2025
 
 ## Econ B2000, MA Econometrics
 
@@ -17,7 +17,7 @@ not saying “caused” since that’s much tougher to demonstrate. Just find
 some things that co-vary. We’ll use ggplot.
 
 Start by writing down 3 variables (from the dataset) that you would
-guess would have the strongest relationship to partnering Then we’ll
+guess would have the strongest relationship to partnering. Then we’ll
 form into groups and spend a few minutes talking through ideas to create
 a group ranking of which are the strongest variables. Maybe talk about a
 more subtle question: what variable do you think would be most
@@ -115,14 +115,14 @@ differences in `summary`.
 summary(d_HHP2020_24$income_midpoint)
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
     ##   12500   40000   82500   95461  125000  225000  187771
 
 ``` r
 summary(d_HHP2020_24$income_midpoint_factor)
 ```
 
-    ##  12500  30000  40000  62500  82500 125000 175000 225000   NA's 
+    ##  12500  30000  40000  62500  82500 125000 175000 225000    NAs 
     ##  85405  67970  85421 134183 112727 145006  73407  92900 187771
 
 People are asked to report their household income as being within a
@@ -242,6 +242,15 @@ xtabs( ~ Mar_Stat + partnered, data = d_HHP2020_24) # just to check
     ##   separated      0  17850
     ##   never     195037      0
 
+But note that this does it for the main dataset, not the little subsets
+that we created earlier. Which might be fine or might not be. In this
+case, not. So re-create the subsets.
+
+``` r
+HHP_NY <- d_HHP2020_24 %>% filter(State == "New York")
+HHP_NY_NJ <- d_HHP2020_24 %>% filter((State == "New York") | (State == "New Jersey") )
+```
+
 We’ll start by cutting the data into particular age groups, focusing on
 people 18 - 45. Note that we want to be finicky about distinguishing `<`
 from `<=` like in a math class. For age, that’s easy to do by listing
@@ -276,7 +285,7 @@ p_MS_Age <- ggplot(data = HHP_NY_NJ_under45,
 p_MS_Age + geom_bar(position = "stack", stat = "count")  
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 But the different numbers in different age groups means it’s not as easy
 to read. Therefore try to make fractions of the age group. I’ll do this
@@ -290,8 +299,12 @@ frac_MS_byAge <- HHP_NY_NJ_under45 %>%
   mutate(freq_in_group = n / sum(n) )
 ```
 
-    ## `summarise()` has grouped output by 'Age_groups'. You can override using the
-    ## `.groups` argument.
+    ## `summarise()` has regrouped the output.
+    ## ℹ Summaries were computed grouped by Age_groups and Mar_Stat.
+    ## ℹ Output is grouped by Age_groups.
+    ## ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+    ## ℹ Use `summarise(.by = c(Age_groups, Mar_Stat))` for per-operation grouping
+    ##   (`?dplyr::dplyr_by`) instead.
 
 Take a look at the output to see if that looks sensible. Then graph,
 
@@ -304,7 +317,7 @@ p_frac_MS_Age <- ggplot(data = frac_MS_byAge,
 p_frac_MS_Age + geom_bar(stat = "identity")  
 ```
 
-![](lab2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](lab2_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Try to make some more useful graphs! Work with your group both to
 generate ideas but also to critique, to decide that some ideas didn’t
